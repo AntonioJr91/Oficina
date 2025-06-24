@@ -1,31 +1,79 @@
 ﻿namespace Oficina
 {
-    internal class Oficina
+    internal static class SistemaOficina
     {
-        private readonly List<Cliente> clientes = new();
-        private readonly List<Mecanico> mecanicos = new();
-        private readonly List<OrdemDeServico> ordens = new();
+        private static readonly List<Cliente> clientes = new();
+        private static readonly List<Mecanico> mecanicos = new();
+        private static readonly List<OrdemDeServico> ordens = new();
 
-        public void AdicionarCliente(Cliente cliente)
+        public static void AdicionarCliente()
         {
+            Console.Write("Nome: ");
+            string? nomeCliente = Console.ReadLine();
+
+            Console.Write("Telefone: ");
+            string? tel = Console.ReadLine();
+
+            TipoDeVeiculo tipo;
+
+            while (true)
+            {
+                Console.Write("Tipo do veículo (0 - Carro / 1 - Moto): ");
+                string? input = Console.ReadLine();
+
+                if (int.TryParse(input, out int valor) && Enum.IsDefined(typeof(TipoDeVeiculo), valor))
+                {
+                    tipo = (TipoDeVeiculo)valor;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Tipo de veículo inválido! Tente novamente.");
+                }
+            }
+
+            Console.Write("Marca: ");
+            string? marca = Console.ReadLine();
+
+            Console.Write("Modelo: ");
+            string? modelo = Console.ReadLine();
+
+            Cliente cliente = new(nomeCliente!, tel!, tipo, marca!, modelo!);
             clientes.Add(cliente);
+
+            Console.WriteLine("Cliente cadastrado com sucesso!");
+            Utils.VoltarAoMenu();
         }
 
-        public void ListarClientes()
+        public static void ListarClientes()
         {
-            foreach (var cliente in clientes)
+            if (clientes.Count >= 1)
             {
-                Console.WriteLine($"[Nome do cliente] - {cliente.Nome}\n" +
-                    $"[Telefone] - {cliente.Telefone}");
+                foreach (var cliente in clientes)
+                {
+                    Console.WriteLine($"[Nome do cliente] - {cliente.Nome}\n" +
+                        $"[Telefone] - {cliente.Telefone}\n" +
+                        $"[Veículo] - {cliente.Veiculo}\n" +
+                        $"[Marca] - {cliente.Marca}\n" +
+                        $"[Modelo] - {cliente.Modelo}");
+                    Console.WriteLine(new string('-', 70));
+                }
+                Utils.VoltarAoMenu();
+            }
+            else
+            {
+                Console.WriteLine("Não há clientes cadastrados");
+                Console.WriteLine(new string('-', 70));
+                Utils.VoltarAoMenu();
             }
         }
 
-        public void AdicionarMecanica(Mecanico mecanico)
+        public static void AdicionarMecanico(Mecanico mecanico)
         {
             mecanicos.Add(mecanico);
         }
 
-        public void ListarMecanicos()
+        public static void ListarMecanicos()
         {
             foreach (var mecanico in mecanicos)
             {
@@ -34,12 +82,12 @@
             }
         }
 
-        public void AdicionarOrdemDeServico(OrdemDeServico ordem)
+        public static void AdicionarOrdemDeServico(OrdemDeServico ordem)
         {
             ordens.Add(ordem);
         }
 
-        public void ListarOrdensDeServicos()
+        public static void ListarOrdensDeServicos()
         {
             foreach (var ordem in ordens)
             {
