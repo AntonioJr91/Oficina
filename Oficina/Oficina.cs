@@ -4,7 +4,7 @@
     {
         private static readonly List<Cliente> clientes = new();
         private static readonly List<Mecanico> mecanicos = new();
-        private static readonly List<OrdemDeServico> ordens = new();
+        private static readonly List<OrdemDeServico> ordensServico = new();
 
         public static void AdicionarCliente()
         {
@@ -41,7 +41,7 @@
             Cliente cliente = new(nomeCliente!, tel!, tipo, marca!, modelo!);
             clientes.Add(cliente);
 
-            Console.WriteLine("Cliente cadastrado com sucesso!");
+            Console.WriteLine("\nCliente cadastrado com sucesso!");
             Utils.VoltarAoMenu();
         }
 
@@ -49,13 +49,10 @@
         {
             if (clientes.Count >= 1)
             {
+
                 foreach (var cliente in clientes)
                 {
-                    Console.WriteLine($"[Nome do cliente] - {cliente.Nome}\n" +
-                        $"[Telefone] - {cliente.Telefone}\n" +
-                        $"[Veículo] - {cliente.Veiculo}\n" +
-                        $"[Marca] - {cliente.Marca}\n" +
-                        $"[Modelo] - {cliente.Modelo}");
+                    cliente.ExibirLista();
                     Console.WriteLine(new string('-', 70));
                 }
                 Utils.VoltarAoMenu();
@@ -68,33 +65,103 @@
             }
         }
 
-        public static void AdicionarMecanico(Mecanico mecanico)
+        public static void AdicionarMecanico()
         {
-            mecanicos.Add(mecanico);
+            Console.Write("Nome: ");
+            string? nome = Console.ReadLine();
+
+            EspecialidadeMecanico especialidade;
+
+            while (true)
+            {
+                Console.Write("Especialidade (0 - Carro / 1 - Moto): ");
+                string? input = Console.ReadLine();
+
+                if (int.TryParse(input, out int valor) && Enum.IsDefined(typeof(TipoDeVeiculo), valor))
+                {
+                    especialidade = (EspecialidadeMecanico)valor;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Especialidade inválida! Tente novamente.");
+                }
+
+            }
+
+            Mecanico novoMecanico = new(nome, especialidade);
+            mecanicos.Add(novoMecanico);
+            Console.WriteLine("\nMecânico adicionado com sucesso!");
+            Utils.VoltarAoMenu();
         }
 
         public static void ListarMecanicos()
         {
-            foreach (var mecanico in mecanicos)
+            if (mecanicos.Count >= 1)
             {
-                Console.WriteLine($"[Nome do mecanico] - {mecanico.Nome}\n" +
-                   $"[Especialidade] - {mecanico.Especialidade}");
+                foreach (var mecanico in mecanicos)
+                {
+                    mecanico.ExibirLista();
+                    Utils.ExibirSeparadorItens();
+                }
+                Utils.VoltarAoMenu();
+            }
+            else
+            {
+                Console.WriteLine("Não há mecânicos cadastrados");
+                Utils.ExibirSeparadorItens();
+                Utils.VoltarAoMenu();
             }
         }
 
-        public static void AdicionarOrdemDeServico(OrdemDeServico ordem)
+        public static void AdicionarOrdemDeServico()
         {
-            ordens.Add(ordem);
+            string? nome = Utils.LeitorDeEntradaTexto("Nome do cliente: ");
+
+            string? telefone = Utils.LeitorDeEntradaTexto("Telefone: ");
+
+            string? marca = Utils.LeitorDeEntradaTexto("Marca do veículo: ");
+
+            string? modelo = Utils.LeitorDeEntradaTexto("Modelo do veículo: ");
+
+            TipoDeVeiculo tipoVeiculo = Utils.LeitorDeEntradaEnum<TipoDeVeiculo>("Tipo do veículo (0 - Carro / 1 - Moto): ");
+
+            Cliente cliente = new(nome, telefone, tipoVeiculo, marca, modelo);
+
+            string? nomeMecanico = Utils.LeitorDeEntradaTexto("Nome do mecânico: ");
+
+            EspecialidadeMecanico especialidade = Utils.LeitorDeEntradaEnum<EspecialidadeMecanico>("Especialidade do mecânico (0 - Carro / 1 - Moto): ");
+
+            Mecanico mecanico = new(nomeMecanico, especialidade);
+
+            TipoDeServico tipoServico = Utils.LeitorDeEntradaEnum<TipoDeServico>("Tipo de serviço (0 - Troca de oléo / 1 - Ajuste de corrente / 2 - Alinhamento&Balanceamento / 3 - Revisão dos freios): ");
+
+            Servico novoServico = new(tipoServico);
+
+            OrdemDeServico novaOrdem = new(cliente, mecanico, novoServico);
+
+            ordensServico.Add(novaOrdem);
+
+            Console.WriteLine("Ordem de serviço adicionada com sucesso!");
+            Utils.VoltarAoMenu();
         }
 
         public static void ListarOrdensDeServicos()
         {
-            foreach (var ordem in ordens)
+            if (ordensServico.Count >= 1)
             {
-                Console.WriteLine($"[ID] - {ordem.Id}\t[Cliente] - {ordem.Cliente.Nome}\t[Tipo do veículo] - {ordem.TipoVeiculo}\t" +
-                    $"[Mecânico responsável] - {ordem.Mecanico.Nome}\t[Especialidade do mecânico] - {ordem.Mecanico.Especialidade}\t" +
-                    $"[Tipo do serviço] - {ordem.TipoServico}\t[Descrição] - {ordem.Descricao}\t[Valor] - {ordem.Valor}\t" +
-                    $"[Valor Total] - {ordem.ValorTotal}");
+                foreach (var ordem in ordensServico)
+                {
+                    ordem.ExibirLista();
+                    Utils.ExibirSeparadorItens();
+                }
+                Utils.VoltarAoMenu();
+            }
+            else
+            {
+                Console.WriteLine("Não há ordem de serviço cadastradas!");
+                Utils.ExibirSeparadorItens();
+                Utils.VoltarAoMenu();
             }
         }
     }

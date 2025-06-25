@@ -1,31 +1,40 @@
 ﻿namespace Oficina
 {
-    internal class OrdemDeServico : Servico, IConsultar
+    internal class OrdemDeServico : ILista
     {
         private static int proximoID = 1;
         public int Id { get; private set; }
         public Cliente Cliente { get; set; }
-        public TipoDeVeiculo TipoVeiculo { get; set; }
         public Mecanico Mecanico { get; set; }
         public List<Servico> Servicos { get; set; } = new();
         public decimal ValorTotal => Servicos.Sum(s => s.Valor);
-
-        public OrdemDeServico(Cliente cliente, TipoDeVeiculo tipoVeiculo, Mecanico mecanico, TipoDeServico tipoServico, string? descricao, decimal valor, decimal valorTotal)
+        public OrdemDeServico(Cliente cliente, Mecanico mecanico, Servico servico)
         {
             Id = proximoID++;
             Cliente = cliente;
-            TipoVeiculo = tipoVeiculo;
             Mecanico = mecanico;
-            TipoServico = tipoServico;
-            Descricao = descricao;
-            Valor = valor;
+            AdicionarServico(servico);
         }
 
-        public void Consultar()
+        private void AdicionarServico(Servico servico)
         {
-            Console.WriteLine($"[Cliente] - {Cliente.Nome}\t[Tipo do veículo] - {TipoVeiculo}\t[Mecânico] - {Mecanico.Nome}\t" +
-                $"[Especialidade] - {Mecanico.Especialidade}\t[Descrição do serviço] - {Descricao}\t[Valor] - {Valor}\t" +
-                $"[Valor Total] -  {ValorTotal}");
+            Servicos.Add(servico);
+        }
+        public void ExibirLista()
+        {
+            Console.WriteLine($"[ID] - {Id}\n" +
+                     $"[Cliente] - {Cliente.Nome}\n" +
+                     $"[Telefone] - {Cliente.Telefone}\n" +
+                     $"[Tipo do veículo] - {Cliente.Veiculo}\n" +
+                     $"[Mecânico responsável] - {Mecanico.Nome}\n" +
+                     $"[Especialidade do mecânico] - {Mecanico.Especialidade}\n");
+            foreach (var servico in Servicos)
+            {
+                Console.Write($"[Serviço]\n" +
+                    $"\t[Tipo do serviço] - {servico.TipoServico}\n" +
+                    $"\t[Valor] - R$ {servico.Valor}\n");
+            }
+            Console.WriteLine($"[Valor Total] - R$ {ValorTotal}");
         }
     }
 }

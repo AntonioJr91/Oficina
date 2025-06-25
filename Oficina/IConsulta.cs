@@ -1,7 +1,7 @@
 ﻿namespace Oficina
 {
-    internal interface IConsultar
+    internal interface ILista
     {
-        void Consultar();
+        void ExibirLista();
     }
 }

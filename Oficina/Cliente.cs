@@ -1,6 +1,6 @@
 ﻿namespace Oficina
 {
-    internal class Cliente : Pessoa, IConsultar
+    internal class Cliente : Pessoa, ILista
     {
         public TipoDeVeiculo Veiculo { get; }
         public string? Marca { get; set; }
@@ -14,9 +14,13 @@
             Marca = marca;
             Modelo = modelo;
         }
-        public void Consultar()
+        public void ExibirLista()
         {
-            Console.WriteLine($"[Nome do cliente] - {Nome}\t[Tel] - {Telefone}\t[Tipo de veículo] - {Veiculo}\t[Marca] - {Marca}\t[Modelo] - {Modelo}\n");
+            Console.WriteLine($"[Nome do cliente] - {Nome}\n" +
+                $"[Tel] - {Telefone}\n" +
+                $"[Tipo de veículo] - {Veiculo}\n" +
+                $"[Marca] - {Marca}\n" +
+                $"[Modelo] - {Modelo}");
         }
     }
 }
